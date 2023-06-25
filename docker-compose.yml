@@ -1,1 +1,15 @@
 version: '3'
+
+services:
+
+  clamav:
+    image: clamav/clamav:latest
+    restart: always
+  
+  ozone:
+    build: Dockerfile
+    restart: always
+    ports:
+      - "3010:8080"
+    depends_on:
+      - clamav
