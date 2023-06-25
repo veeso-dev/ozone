@@ -1,5 +1,8 @@
-use actix_web::{dev::Server, web::Data, App as ActixApp, HttpServer};
 use std::net::TcpListener;
+
+use actix_web::dev::Server;
+use actix_web::web::Data;
+use actix_web::{App as ActixApp, HttpServer};
 
 mod health_check;
 mod scan;

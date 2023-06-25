@@ -85,7 +85,7 @@ impl ClamAvClient {
     async fn write(&mut self, buf: &[u8]) -> anyhow::Result<()> {
         info!("ClamAV OUT {} bytes", buf.len());
         debug!("ClamAV OUT: {:?}", buf);
-        self.socket.write(buf).await?;
+        self.socket.write_all(buf).await?;
 
         Ok(())
     }
@@ -103,9 +103,9 @@ impl ClamAvClient {
 #[cfg(test)]
 mod test {
 
-    use super::*;
-
     use pretty_assertions::assert_eq;
+
+    use super::*;
 
     #[test]
     fn should_get_threat_name() {

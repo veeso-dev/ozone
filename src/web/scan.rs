@@ -3,12 +3,11 @@ use actix_web::{post, web, Error, HttpRequest, HttpResponse};
 use futures_util::{StreamExt, TryStreamExt};
 use serde_with::skip_serializing_none;
 use tempfile::tempfile;
-use tokio::io::AsyncWriteExt;
-use tokio::{fs::File, io::AsyncSeekExt};
-
-use crate::clamav::{ClamAvClient, Scan};
+use tokio::fs::File;
+use tokio::io::{AsyncSeekExt, AsyncWriteExt};
 
 use super::WebserverData;
+use crate::clamav::{ClamAvClient, Scan};
 
 #[derive(Serialize, Debug)]
 struct ScanResponse {
@@ -79,7 +78,7 @@ async fn scan(
 
         while let Some(Ok(chunk)) = field.next().await {
             total_size += chunk.len();
-            async_temp.write(&chunk).await?;
+            async_temp.write_all(&chunk).await?;
         }
 
         // rewind file
