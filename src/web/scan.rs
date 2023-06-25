@@ -57,7 +57,7 @@ async fn scan(
             Ok(client) => client,
             Err(err) => {
                 error!("failed to init clamav client: {err}");
-                return Ok(HttpResponse::InternalServerError().body(format!("failed to scan file")));
+                return Ok(HttpResponse::InternalServerError().body("failed to scan file".to_string()));
             }
         };
 
@@ -66,7 +66,7 @@ async fn scan(
             total_size += chunk.len();
             if let Err(err) = clamav_client.send(chunk).await {
                 error!("failed to send data to clamav: {err}");
-                return Ok(HttpResponse::InternalServerError().body(format!("failed to scan file")));
+                return Ok(HttpResponse::InternalServerError().body("failed to scan file".to_string()));
             }
         }
 
@@ -76,7 +76,7 @@ async fn scan(
             Ok(Scan::Unsafe) => false,
             Err(err) => {
                 error!("failed to read clamav response: {err}");
-                return Ok(HttpResponse::InternalServerError().body(format!("failed to scan file")));
+                return Ok(HttpResponse::InternalServerError().body("failed to scan file".to_string()));
             }
         };
 

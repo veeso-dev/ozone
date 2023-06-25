@@ -50,7 +50,7 @@ impl ClamAvClient {
 
         trace!("ClamAV IN: {buf}");
 
-        if buf.contains(&FOUND_RESPONSE) {
+        if buf.contains(FOUND_RESPONSE) {
             Ok(Scan::Unsafe)
         } else {
             Ok(Scan::Safe)
@@ -59,7 +59,7 @@ impl ClamAvClient {
 
     async fn write(&mut self, buf: &[u8]) -> anyhow::Result<()> {
         trace!("ClamAV OUT: {:?}", buf);
-        self.socket.write_all(&buf).await?;
+        self.socket.write_all(buf).await?;
 
         Ok(())
     }

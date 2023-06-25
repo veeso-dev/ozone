@@ -24,7 +24,7 @@ impl WebServer {
         debug!("protobuf url: {clamav_address}");
         debug!("web port: {web_port}");
 
-        let listener = TcpListener::bind(&format!("0.0.0.0:{web_port}"))?;
+        let listener = TcpListener::bind(format!("0.0.0.0:{web_port}"))?;
 
         let server = {
             let clamav_address = clamav_address.to_string();
