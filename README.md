@@ -42,11 +42,6 @@
       src="https://github.com/veeso-dev/ozone/workflows/build-test/badge.svg"
       alt="Linux CI"
   /></a>
-  <a href="https://coveralls.io/github/veeso-dev/ozone"
-    ><img
-      src="https://coveralls.io/repos/github/veeso-dev/ozone/badge.svg"
-      alt="Coveralls"
-  /></a>
 </p>
 
 ---
