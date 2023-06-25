@@ -24,7 +24,7 @@ A clear and concise description of what you expected to happen.
 - OS: [e.g. GNU/Linux Debian 10]
 - Architecture [Arm, x86_64, ...]
 - Rust version
-- tui-realm version
+- ozone version
 
 ## Additional information
 

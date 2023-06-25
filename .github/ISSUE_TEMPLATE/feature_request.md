@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea to improve tui-realm
+about: Suggest an idea to improve ozone
 title: "[Feature Request] - FEATURE_TITLE"
 labels: "new feature"
 assignees: veeso

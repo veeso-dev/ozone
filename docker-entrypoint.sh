@@ -2,6 +2,6 @@
 
 set -e
 
-export RUST_LOG="debug"
+export RUST_LOG="info"
 
 cargo make --profile production run

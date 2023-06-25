@@ -1,4 +1,4 @@
-name: Linux
+name: build-test
 
 on: [push, pull_request]
 
@@ -12,9 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
-        run: sudo apt update && sudo apt install -y libsmbclient-dev libsmbclient
+        run: sudo apt update && sudo apt install -y libssl-dev pkg-config
       - name: Setup containers
-        run: docker-compose -f "tests/docker-compose.yml" up -d --build
+        run: docker-compose -f "docker-compose.dev.yml" up -d --build
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
@@ -29,7 +29,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --no-default-features --features with-containers --no-fail-fast
+          args: --no-default-features --features with-containers
         env:
           RUST_LOG: trace
       - name: Format

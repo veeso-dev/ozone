@@ -1,6 +1,10 @@
 use actix_multipart::Multipart;
 use actix_web::{post, web, Error, HttpRequest, HttpResponse};
 use futures_util::{StreamExt, TryStreamExt};
+use serde_with::skip_serializing_none;
+use tempfile::tempfile;
+use tokio::io::AsyncWriteExt;
+use tokio::{fs::File, io::AsyncSeekExt};
 
 use crate::clamav::{ClamAvClient, Scan};
 
@@ -11,11 +15,13 @@ struct ScanResponse {
     files: Vec<ScannedFile>,
 }
 
+#[skip_serializing_none]
 #[derive(Serialize, Debug)]
 struct ScannedFile {
     name: String,
     safe: bool,
     size: usize,
+    threat: Option<String>,
 }
 
 #[post("/scan")]
@@ -31,12 +37,16 @@ async fn scan(
 
     debug!("content length is {content_length}");
     match content_length {
-        0 => return Ok(HttpResponse::BadRequest().finish()),
+        0 => {
+            error!("content length is 0");
+            return Ok(HttpResponse::BadRequest().finish());
+        }
         length if length > data.max_upload_size => {
+            error!("The uploaded file is too large. Maximum size is {} bytes, but file has size {length}.", data.max_upload_size);
             return Ok(HttpResponse::BadRequest().body(format!(
             "The uploaded file is too large. Maximum size is {} bytes, but file has size {length}.",
             data.max_upload_size
-        )))
+        )));
         }
         _ => {}
     };
@@ -57,33 +67,43 @@ async fn scan(
             Ok(client) => client,
             Err(err) => {
                 error!("failed to init clamav client: {err}");
-                return Ok(HttpResponse::InternalServerError().body("failed to scan file".to_string()));
+                return Ok(
+                    HttpResponse::InternalServerError().body("failed to scan file".to_string())
+                );
             }
         };
 
+        let temp = tempfile()?;
+        let mut async_temp = File::from_std(temp);
         let mut total_size = 0;
+
         while let Some(Ok(chunk)) = field.next().await {
             total_size += chunk.len();
-            if let Err(err) = clamav_client.send(chunk).await {
-                error!("failed to send data to clamav: {err}");
-                return Ok(HttpResponse::InternalServerError().body("failed to scan file".to_string()));
-            }
+            async_temp.write(&chunk).await?;
         }
 
-        // wait for response
-        let is_safe = match clamav_client.finish().await {
-            Ok(Scan::Safe) => true,
-            Ok(Scan::Unsafe) => false,
+        // rewind file
+        async_temp.seek(std::io::SeekFrom::Start(0)).await?;
+
+        // scan file
+        let (is_safe, threat) = match clamav_client.scan(async_temp, total_size as u32).await {
+            Ok(Scan::Safe) => (true, None),
+            Ok(Scan::Unsafe(threat_name)) => (false, Some(threat_name)),
             Err(err) => {
                 error!("failed to read clamav response: {err}");
-                return Ok(HttpResponse::InternalServerError().body("failed to scan file".to_string()));
+                return Ok(
+                    HttpResponse::InternalServerError().body("failed to scan file".to_string())
+                );
             }
         };
+
+        debug!("scan result for {filename}: is safe? {is_safe}");
 
         files.push(ScannedFile {
             name: filename,
             safe: is_safe,
             size: total_size,
+            threat,
         });
     }
 

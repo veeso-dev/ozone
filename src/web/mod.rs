@@ -20,9 +20,9 @@ impl WebServer {
         max_upload_size: usize,
         web_port: u16,
     ) -> anyhow::Result<Self> {
-        debug!("webserver initialized");
-        debug!("protobuf url: {clamav_address}");
-        debug!("web port: {web_port}");
+        info!("webserver initialized");
+        info!("protobuf url: {clamav_address}");
+        info!("web port: {web_port}");
 
         let listener = TcpListener::bind(format!("0.0.0.0:{web_port}"))?;
 

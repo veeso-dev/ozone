@@ -13,9 +13,9 @@ const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
 #[actix_web::main]
 async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
-    info!("user-api v{} - developed by {}", APP_VERSION, APP_AUTHORS);
+    info!("ozone v{} - developed by {}", APP_VERSION, APP_AUTHORS);
     let config = config::Config::try_from_env()?;
-    debug!("initializing web service...");
+    info!("initializing web service...");
     let web_service = web::WebServer::init(
         &config.clamav_address,
         config.max_upload_size,

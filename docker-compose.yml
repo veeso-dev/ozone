@@ -7,9 +7,11 @@ services:
     restart: always
   
   ozone:
-    build: Dockerfile
+    build: .
     restart: always
     ports:
       - "3010:8080"
     depends_on:
       - clamav
+    volumes:
+      - ./:/app/ozone
