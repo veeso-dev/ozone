@@ -125,7 +125,7 @@ Response:
       "name": "eicarcom2.zip",
       "safe": false,
       "size": 308,
-      "threat": ""
+      "threat": "Win.Test.EICAR_HDB-1"
     }
   ]
 }

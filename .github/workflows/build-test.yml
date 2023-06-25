@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
-        run: sudo apt update && sudo apt install -y libssl-dev pkg-config
+        run: sudo apt update && sudo apt install -y libssl-dev pkg-config && cargo install cargo-make
       - name: Setup containers
         run: docker-compose -f "docker-compose.dev.yml" up -d --build
       - uses: actions-rs/toolchain@v1
@@ -25,13 +25,8 @@ jobs:
         with:
           command: build
           args: --all-targets
-      - name: Run tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --no-default-features --features with-containers
-        env:
-          RUST_LOG: trace
+      - name: Test
+        run: cargo make test
       - name: Format
         run: cargo fmt --all -- --check
       - name: Clippy
