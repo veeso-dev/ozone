@@ -135,7 +135,8 @@ Response:
 
 Where:
 
-- `name`: is the filename
+- `name`: is the form field name
+- `filename`: is the filename
 - `safe`: whether the file is safe
 - `size`: the file size
 - `threat`: the threat name found (optional; only if safe is `false`)
