@@ -1,6 +1,6 @@
 env_files = [
   { path = "./.env", profile = "production" },
-  { path = "./.env.test", profile = "test" },
+  { path = "./.env.test", profile = "development" },
 ]
 
 [tasks.run]

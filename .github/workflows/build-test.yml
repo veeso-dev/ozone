@@ -26,7 +26,7 @@ jobs:
           command: build
           args: --all-targets
       - name: Test
-        run: cargo make test --profile test
+        run: cargo make test --profile development
       - name: Format
         run: cargo fmt --all -- --check
       - name: Clippy
