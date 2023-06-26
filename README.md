@@ -7,7 +7,7 @@
   <a href="https://crates.io/crates/ozone-ws" target="_blank">Crates.io</a>
 </p>
 <p align="center">Developed by <a href="https://veeso.dev/" target="_blank">@veeso</a></p>
-<p align="center">Current version: 0.1.0 (25/06/2023)</p>
+<p align="center">Current version: 0.1.0 (26/06/2023)</p>
 
 <p align="center">
   <a href="https://opensource.org/license/mit/"
@@ -107,8 +107,8 @@ POST /scan
 curl --request POST \
   --url http://localhost:3010/scan \
   --header 'Content-Type: multipart/form-data' \
-  --form file1.txt=@/tmp/file1.txt \
-  --form eicarcom2.zip=@/tmp/eicarcom2.zip
+  --form file=@/tmp/file1.txt \
+  --form malware=@/tmp/eicarcom2.zip
 ```
 
 Response:
@@ -117,12 +117,14 @@ Response:
 {
   "files": [
     {
-      "name": "file1.txt",
+      "name": "file",
+      "filename": "file1.txt",
       "safe": true,
       "size": 222
     },
     {
-      "name": "eicarcom2.zip",
+      "name": "malware",
+      "filename": "eicarcom2.zip",
       "safe": false,
       "size": 308,
       "threat": "Win.Test.EICAR_HDB-1"

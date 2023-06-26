@@ -83,7 +83,6 @@ impl ClamAvClient {
     }
 
     async fn write(&mut self, buf: &[u8]) -> anyhow::Result<()> {
-        info!("ClamAV OUT {} bytes", buf.len());
         debug!("ClamAV OUT: {:?}", buf);
         self.socket.write_all(buf).await?;
 

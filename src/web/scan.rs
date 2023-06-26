@@ -18,6 +18,7 @@ struct ScanResponse {
 #[derive(Serialize, Debug)]
 struct ScannedFile {
     name: String,
+    filename: String,
     safe: bool,
     size: usize,
     threat: Option<String>,
@@ -99,7 +100,8 @@ async fn scan(
         debug!("scan result for {filename}: is safe? {is_safe}");
 
         files.push(ScannedFile {
-            name: filename,
+            name: field.name().to_string(),
+            filename,
             safe: is_safe,
             size: total_size,
             threat,
