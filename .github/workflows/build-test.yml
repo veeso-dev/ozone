@@ -3,10 +3,10 @@ name: build-test
 on:
   pull_request:
     paths-ignore:
-      - "README.md"
+      - "*.md"
   push:
     paths-ignore:
-      - "README.md"
+      - "*.md"
 
 env:
   CARGO_TERM_COLOR: always
